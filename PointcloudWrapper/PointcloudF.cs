@@ -56,7 +56,7 @@ namespace PointcloudWrapper
                 return z;
             }
         }
-
+    
 
         /// <summary>
         /// 创建一个基本点云
@@ -71,7 +71,17 @@ namespace PointcloudWrapper
             this.z = z;
         }
 
-
+        public List<(float x, float y, float z)> GetPoints()
+        {
+            List<(float x, float y, float z)> points;
+            points = new List<(float x, float y, float z)>();
+            int length = x.Length;
+            for (int i = 0; i < length; i++)
+            {
+                points.Add((x[i], y[i], z[i]));
+            }
+            return points;
+        }
 
 
         /// <summary>
