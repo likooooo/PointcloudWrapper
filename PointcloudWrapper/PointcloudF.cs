@@ -3,35 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace PointcloudWrapper
 {
-    /**
-   * 基本点云数据结构
-   * **/
-    interface IPointcloudF
-    {
-        float[] X
-        {
-            get;
-        }
-        float[] Y
-        {
-            get;
-        }
-        float[] Z
-        {
-            get;
-        }
-
-        PointcloudF Clone();
-    }
-
-
     /// <summary>
     /// 这个类不允许做数据处理，只允许数据的存储，如果要做处理，需要用继承
     /// </summary>
-    public class PointcloudF : IPointcloudF
+    public class PointcloudF
     {
         float[] x, y, z;
         public float[] X
@@ -84,12 +63,33 @@ namespace PointcloudWrapper
         }
 
 
+        public static PointcloudF Clone(List<(float x, float y, float z)> points)
+        {
+            PointcloudF ps = new PointcloudF(
+                points.Select(s => s.x).ToArray(),
+                 points.Select(s => s.y).ToArray(),
+                  points.Select(s => s.z).ToArray());
+            return ps;
+        }
         /// <summary>
         /// 复制一个点云对象
         /// </summary>
         /// <returns></returns>
         public PointcloudF Clone()
              => (new PointcloudF(this.x, this.y, this.z));
+
+
+        public virtual void Save(string fileName)
+        {
+            int loopCount = x.Length;
+            using (StreamWriter sw = new StreamWriter(File.Create(fileName)))
+            {
+                for (int i = 0; i < loopCount; i++)
+                {
+                    sw.WriteLine(x[i] + " " + y[i] + " " + z[i]);
+                }
+            }
+        }
     }
 
 }
